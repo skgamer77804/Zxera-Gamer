@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zxera Gamer - Download</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            position: relative;
+        }
+
+        /* Particle canvas */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main card */
+        .card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 22px;
+            padding: 40px 25px;
+            text-align: center;
+            width: 88%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            animation: cardIn 0.8s ease;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ff0055, #ff9900, #00c6ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: #bbb;
+            margin-bottom: 28px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(90deg, #ff0055, #ff5500);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.3s, opacity 0.3s;
+            box-shadow: 0 8px 25px rgba(255, 0, 85, 0.4);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(255, 0, 85, 0.6);
+        }
+
+        .download-btn:active {
+            transform: scale(0.97);
+        }
+
+        .download-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .download-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Popup overlay — FULL SCREEN */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* mobile dynamic viewport */
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+            transition: opacity 0.4s ease;
+        }
+
+        .popup-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .popup {
+            background: linear-gradient(160deg, #1e1e2f, #2a2a40);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            padding: 35px 22px;
+            text-align: center;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .popup-icon {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+        }
+
+        .popup h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .popup p {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .popup p b {
+            color: #ff0055;
+        }
+
+        .subscribe-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(90deg, #ff0000, #ff4b2b);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
+        }
+
+        .subscribe-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 0, 0, 0.6);
+        }
+
+        .subscribe-btn:active {
+            transform: scale(0.97);
+        }
+
+        .subscribe-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .footer {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #777;
+            text-align: center;
+        }
+
+        /* Small phones */
+        @media (max-width: 380px) {
+            .logo { font-size: 1.7rem; }
+            .card { padding: 35px 20px; }
+            .popup { padding: 30px 18px; }
+            .popup h2 { font-size: 1.15rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Particle background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Main Card -->
+    <div class="card">
+        <div class="logo">Zxera Gamer</div>
+        <p class="tagline">Free Fire MAX Bypass  Download Portal</p>
+
+        <a href="#" id="downloadBtn" class="download-btn locked">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Download Now
+        </a>
+    </div>
+
+    <p class="footer">© 2026 Zxera Gamer — All rights reserved</p>
+
+    <!-- FULL SCREEN Subscribe Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <div class="popup-icon">🔥</div>
+            <h2>Subscribe Required</h2>
+            <p>Download shuru karne se pehle hamare YouTube channel <b>Zxera Gamer</b> ko subscribe karein. Subscribe karne ke baad download button unlock ho jayega.</p>
+            <a href="https://www.youtube.com/@ZxERAGAMER" target="_blank" rel="noopener" id="subscribeBtn" class="subscribe-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/>
+                </svg>
+                Subscribe Now
+            </a>
+        </div>
+    </div>
+
+    <script>
+        /* ================== PARTICLE ANIMATION ================== */
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let w, h;
+        const PARTICLE_COUNT = 70;
+        const COLORS = ['#ff0055', '#ff9900', '#00c6ff', '#a855f7', '#ffffff'];
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 2.2 + 0.8,
+                    vx: (Math.random() - 0.5) * 0.6,
+                    vy: (Math.random() - 0.5) * 0.6,
+                    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                    alpha: Math.random() * 0.5 + 0.3
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw connecting lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.08 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw particles
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        function updateParticles() {
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Bounce off edges
+                if (p.x < 0 || p.x > w) p.vx *= -1;
+                if (p.y < 0 || p.y > h) p.vy *= -1;
+
+                // Wrap around (safety)
+                if (p.x < -10) p.x = w + 10;
+                if (p.x > w + 10) p.x = -10;
+                if (p.y < -10) p.y = h + 10;
+                if (p.y > h + 10) p.y = -10;
+            });
+        }
+
+        function animate() {
+            updateParticles();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resize();
+            createParticles();
+        });
+
+        resize();
+        createParticles();
+        animate();
+
+        /* ================== POPUP + DOWNLOAD LOGIC ================== */
+        const popupOverlay = document.getElementById('popupOverlay');
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        const downloadLink = "https://github.com/skgamer77804/Sssssss/releases/download/Bypass/FreeFire.MAX.2.133.1.x64.apks";
+
+        let subscribed = false;
+
+        subscribeBtn.addEventListener('click', function (e) {
+            // YouTube link open hone do (target _blank)
+            // Popup full screen hatao
+            popupOverlay.classList.add('hidden');
+            subscribed = true;
+
+            // Download button unlock
+            downloadBtn.classList.remove('locked');
+            downloadBtn.setAttribute('href', downloadLink);
+        });
+
+        downloadBtn.addEventListener('click', function (e) {
+            if (!subscribed) {
+                e.preventDefault();
+                return;
+            }
+            // Popup already hidden, link khul jayega
+        });
+    </script>
+</body>
+</html>
